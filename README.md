@@ -1,7 +1,7 @@
 # Vectorisation of the conditions
 
 ## Doc2Vec
-Currently the doc2vec model can be run using `python3 doc2vec_model.py` in the repo directory. It builds a model based on the conditions templates, and then assesses the accuracy against the same training data. The code structure follows is modelled on the [official tutorial](https://radimrehurek.com/gensim/auto_examples/tutorials/run_doc2vec_lee.html#sphx-glr-download-auto-examples-tutorials-run-doc2vec-lee-py).
+Currently the doc2vec model can be run using `python3 doc2vec_model.py` in the repo directory. It builds a model based on the conditions templates, and then assesses the accuracy against the same training data. The code structure follows is modelled on the [official tutorial](https://radimrehurek.com/gensim/auto_examples/tutorials/run_doc2vec_lee.html).
 
 Since there are many duplicate or very similar conditions the accuracy is not great. To improve this, we may need to manually sort through the templates to group/remove duplicates.
 
