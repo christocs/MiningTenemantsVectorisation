@@ -4,6 +4,7 @@ from gensim.models.doc2vec import TaggedDocument
 import collections
 
 NEAR_MATCH_THRESHOLD = 0.03 # how close a template match must be to the highest match to be considered significant
+EPOCHS = 100
 
 class Template(TaggedDocument):
     def __new__(self, tokens, tags, id, version):
@@ -35,12 +36,12 @@ def read_templates(fname, template_column_name = "Text"):
             result.append(Template(tokens, [i], int(row['Identifier']), int(row['Version No'])))
             ID_cache[i] = row['Identifier'] + '.' + row['Version No']
     print("Imported {0} conditions templates in {1:.2f} seconds\n".format(len(result), time.time() - start_time))
-    return result, ID_cache
+    return result
 
 def train_model(templates):
     print("Training the model")
     start_time = time.time()
-    model = gensim.models.doc2vec.Doc2Vec(documents=templates, vector_size=50, min_count=2, epochs=200, dm=1)
+    model = gensim.models.doc2vec.Doc2Vec(documents=templates, vector_size=50, min_count=2, epochs=EPOCHS, dm=1)
     assert len(model.docvecs) == len(templates), "Uh oh! The number of trained vectors doesn't equal the number of conditions templates."
     print("Model trained in {0:.2f} seconds\n".format(time.time() - start_time))
     return model
@@ -56,7 +57,7 @@ def vector_match(model, templates, conditions = []):
     single_matches = {}
     multiple_matches = {}
     for cID, condition in enumerate(conditions):
-        condition_vector = model.infer_vector(gensim.utils.simple_preprocess(condition))
+        condition_vector = model.infer_vector(condition)
         most_similar = model.docvecs.most_similar([condition_vector], topn=5) 
         highest_score = most_similar[0][1]
 
@@ -74,11 +75,12 @@ def vector_match(model, templates, conditions = []):
 
 
 if __name__ == '__main__':
-    templates, ID_version = list(read_templates(os.getcwd() + "/tenement_templates_dupes_removed.csv"))
+    templates = read_templates(os.getcwd() + "/tenement_templates_dupes_removed.csv")
+    conditions = read_conditions(os.getcwd() + "/ConditionsNoRegexMatches.csv", "CondText")
     model = train_model(templates)
 
     # Assess the model with the training data (sanity check)
-    matched, uncertain = vector_match(model, templates)
+    matched, uncertain = vector_match(model, templates, conditions)
     print("{0} documents matches exactly, {1} have multiple matches\n".format(len(matched), len(uncertain)))
     
     ranks = []
@@ -87,29 +89,3 @@ if __name__ == '__main__':
     counter = collections.Counter(ranks)
     print("The number of matches per uncertain document are:")
     print(counter)
-
-    # TODO: testing
-    vector = model.infer_vector(templates[23].words)
-    most_similar = model.docvecs.most_similar([vector], topn=len(model.docvecs))
-    #  print(most_similar[:5])
-
-    # Match each condition with the templates
-    # Determine which conditions have 
-        # just one match
-        # > 1 match
-    # write the results to disk
-    # output a count of the results
-    # output a graph
-    # determine how many of the conditions are duplicates
-
-
-
-
-    # Similar matches may just be a different Version of the same Identifier
-    # Check second best matches that rank highly, but don't have the same Identifier
-    #  for tID in range(len(templates[:10])):
-        #  second = second_ranks[tID]
-        #  if templates[tID].tags is not second[0] and second[1] > 0.9 and int(float(ID_version[tID])) is not int(float(ID_version[second[0]])):
-            #  print('Train Document ({}), ID-{}: «{}»'.format(tID, ID_version[tID], ' '.join(templates[tID].words)))
-            #  print('Similar Document {}, ID-{}: «{}»\n'.format(second[0], ID_version[second[0]], ' '.join(templates[second[0]].words)))
-
