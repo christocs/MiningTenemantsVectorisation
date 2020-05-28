@@ -1,0 +1,28 @@
+Imported 780 conditions templates in 0.07 seconds
+
+Imported 107531 conditions in 0.70 seconds
+
+Preprocessed 107531 conditions in 6.21 seconds
+
+Training the model
+Model trained in 28.45 seconds
+
+Matching the documents
+107531 documents compared in 3922.96 seconds
+
+75093 documents have been paired to a template ID exactly, 32438 have multiple matches
+
+The number of matches per uncertain document are:
+Counter({2: 15551, 3: 7530, 4: 4843, 5: 2342, 6: 1042, 7: 574, 8: 312, 9: 152, 10: 92})
+
+Matched Scores:
+     Min    1st Quartile    Median      Mean    3rd Quartile       Max
+--------  --------------  --------  --------  --------------  --------
+0.306531        0.612243   0.69833  0.712376        0.875596  0.989535
+
+Multi-Matched High Scores:
+     Min    1st Quartile    Median      Mean    3rd Quartile       Max
+--------  --------------  --------  --------  --------------  --------
+0.284642        0.445932  0.499944  0.531445        0.581919  0.970164
+
+
