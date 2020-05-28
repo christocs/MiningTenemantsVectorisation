@@ -1,0 +1,12 @@
+Imported 780 conditions templates in 0.06 seconds
+
+Imported 24364 conditions in 0.16 seconds
+
+Matching strings
+24364 conditions matched in 2332.26 seconds
+
+  Min    1st Quartile    Median    Mean    3rd Quartile    Max
+-----  --------------  --------  ------  --------------  -----
+  100             100       100     100             100    100
+
+

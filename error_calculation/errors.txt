@@ -1,0 +1,12 @@
+Imported 24364 conditions from ConditionsWithRegexMatchesThatOnlySatisfyGreedyRegex.csv in 0.24 seconds
+
+Imported 24364 conditions from Doc2VecOnGreedyRegex.csv in 0.20 seconds
+
+Imported 24364 conditions from FuzzyWuzzyOnGreedyRegex.csv in 0.20 seconds
+
+Method        Correct    Incorrect    Percentage Correct
+----------  ---------  -----------  --------------------
+doc2vec         15099         9265               61.9726
+fuzzywuzzy       8096        16268               33.2294
+
+

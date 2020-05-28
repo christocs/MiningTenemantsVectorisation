@@ -37,7 +37,7 @@ def compare(bible, to_compare):
 if __name__ == '__main__':
     reg = read(os.getcwd() + "/ConditionsWithRegexMatchesThatOnlySatisfyGreedyRegex.csv")
     d2v = read(os.getcwd() + "/Doc2VecOnGreedyRegex.csv")
-    fuzz = read(os.getcwd() +  "/Doc2VecOnGreedyRegex.csv") # should be fuzzywuzzy output
+    fuzz = read(os.getcwd() +  "/FuzzyWuzzyOnGreedyRegex.csv") 
 
     comparisons = compare(reg, {"doc2vec": d2v, "fuzzywuzzy": fuzz})
     header = ["Method", "Correct", "Incorrect", "Percentage Correct"]
