@@ -1,4 +1,4 @@
-import os, time, csv, re, random, pickle, collections
+import os, time, csv, re, random, collections
 import gensim
 from gensim.models.doc2vec import TaggedDocument
 import numpy as np
@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from tabulate import tabulate
 
 NEAR_MATCH_THRESHOLD = 0.03 # how close a template match must be to the highest match to be considered significant
-EPOCHS = 10
+EPOCHS = 500
 
 class Template(TaggedDocument):
     def __new__(self, tokens, tags, id, version):
@@ -110,7 +110,7 @@ def vector_match(model, templates, conditions = [], multimatch = True):
 def multimatch_summary(multimatched):
     ranks = []
     for ID, matches in multimatched.items():
-        ranks.append(len(multimatched))
+        ranks.append(len(matches))
     counter = collections.Counter(ranks)
     print("The number of matches per uncertain document are:")
     print(counter)
@@ -143,15 +143,17 @@ def frequency_plot(data):
 
 
 if __name__ == '__main__':
-    templates = read_templates(os.getcwd() + "/tenement_templates_regex.csv")
+    templates = read_templates(os.getcwd() + "/tenement_templates_regex_no_overlapping_templates.csv")
     orig_conditions = read_conditions(os.getcwd() + "/ConditionsNoRegexMatches.csv", "CondText")
     conditions = tokenise(orig_conditions)
             
     model = train_model(templates)
 
     # Assess the model with the training data (sanity check)
-    matched, uncertain = vector_match(model, templates, multimatch=False)
-    #  matched, uncertain = vector_match(model, templates, conditions)
+    #  matched, uncertain = vector_match(model, templates, multimatch=True)
+    #  matched, uncertain = vector_match(model, templates, multimatch=False)
+    matched, uncertain = vector_match(model, templates, conditions)
+    #  matched, uncertain = vector_match(model, templates, conditions, multimatch=False)
     print("{0} documents have been paired to a template ID exactly, {1} have multiple matches\n".format(len(matched), len(uncertain)))
     
     multimatch_summary(uncertain)
@@ -181,3 +183,5 @@ if __name__ == '__main__':
         for ID, matches in uncertain.items():
             for i, match in enumerate(matches):
                 wr.writerow([str(x) for x in match] + [orig_conditions[ID], str(i+1)])
+    
+    print() # print a new line only
